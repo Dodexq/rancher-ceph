@@ -1,0 +1,12 @@
+[pve]
+pve1 ansible_ssh_host=192.168.0.102
+
+[workers]
+k8s-1 ansible_ssh_host=k8s-1.dodex.home
+k8s-2 ansible_ssh_host=k8s-2.dodex.home
+k8s-3 ansible_ssh_host=k8s-3.dodex.home
+
+[storages]
+node-1 ansible_ssh_host=node-1.dodex.home
+node-2 ansible_ssh_host=node-2.dodex.home
+node-3 ansible_ssh_host=node-3.dodex.home
