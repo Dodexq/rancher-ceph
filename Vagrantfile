@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
   #  server.vm.disk :disk, size: "40GB", name: "extra_storage"
 
     server.vm.provider "virtualbox" do |vb|
-      vb.memory = "4096"
+      vb.memory = "3096"
       vb.name = "k8s-1"
       vb.cpus = "1"
   end
@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
   #  server.vm.disk :disk, size: "40GB", name: "extra_storage"
 
     server.vm.provider "virtualbox" do |vb|
-      vb.memory = "4096"
+      vb.memory = "3096"
       vb.name = "k8s-2"
       vb.cpus = "1"
   end
@@ -41,7 +41,7 @@ Vagrant.configure("2") do |config|
   #  server.vm.disk :disk, size: "40GB", name: "extra_storage"
 
     server.vm.provider "virtualbox" do |vb|
-      vb.memory = "4096"
+      vb.memory = "3096"
       vb.name = "k8s-3"
       vb.cpus = "1"
   end
@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
   #  server.vm.disk :disk, size: "40GB", name: "extra_storage"
 
     server.vm.provider "virtualbox" do |vb|
-      vb.memory = "2048"
+      vb.memory = "1548"
       vb.name = "node-1"
       vb.cpus = "1"
   end
@@ -73,7 +73,7 @@ Vagrant.configure("2") do |config|
   #  server.vm.disk :disk, size: "40GB", name: "extra_storage"
 
     server.vm.provider "virtualbox" do |vb|
-      vb.memory = "2048"
+      vb.memory = "1548"
       vb.name = "node-2"
       vb.cpus = "1"
   end
@@ -89,7 +89,7 @@ Vagrant.configure("2") do |config|
   #  server.vm.disk :disk, size: "40GB", name: "extra_storage"
 
     server.vm.provider "virtualbox" do |vb|
-      vb.memory = "2048"
+      vb.memory = "1548"
       vb.name = "node-3"
       vb.cpus = "1"
   end
