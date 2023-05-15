@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SERVER=rke-test.amegaserver.com
+SERVER=rancher.dodex.site
 
 # Install the CustomResourceDefinition resources separately
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.crds.yaml
