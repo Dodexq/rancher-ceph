@@ -5,21 +5,21 @@ enable_cluster_monitoring: false
 ignore_docker_version: true
 
 nodes:
-  - address: 192.168.0.211
+  - address: 192.168.0.113
     hostname_override: node1
     user: root
     labels:
       worker: yes
       location: nsk
     role: [controlplane, worker, etcd]
-  - address: 192.168.0.212
+  - address: 192.168.0.111
     hostname_override: node2
     user: root
     labels:
       worker: yes
       location: nsk
     role: [controlplane, worker, etcd]
-  - address: 192.168.0.213
+  - address: 192.168.0.114
     hostname_override: node3
     user: root
     labels:
