@@ -1,3 +1,4 @@
+kubernetes_version: "v1.21.14-rancher1-1"
 cluster_name: k8s-nsk
 name: k8s-nsk
 enable_cluster_alerting: false
@@ -19,7 +20,7 @@ nodes:
       worker: yes
       location: nsk
     role: [controlplane, worker, etcd]
-  - address: 192.168.0.118
+  - address: 192.168.0.100
     hostname_override: node3
     user: root
     labels:
@@ -40,7 +41,7 @@ services:
       max-pods: 250
   kube-api:
     extra_args:
-      feature-gates: "ServiceAccountIssuerDiscovery=false,RemoveSelfLink=false"
+      feature-gates: RemoveSelfLink=false
 
 ingress:
   provider: nginx
