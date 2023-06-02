@@ -1,10 +1,10 @@
-# SOURCE: https://install.portworx.com/?mc=false&kbver=1.21.14&ns=portworx&oem=esse&user=a6a764ca-464e-4624-b946-1214e8f03f24&b=true&s=%2Fdev%2Fsdb&j=auto&c=px-cluster-fec4e8bd-9a5b-4feb-9fd0-15f632d8a931&stork=true&csi=true&tel=true&st=k8s
+# SOURCE: https://install.portworx.com/?mc=false&kbver=1.21.14&oem=esse&user=a6a764ca-464e-4624-b946-1214e8f03f24&b=true&s=%2Fdev%2Fsdb&j=auto&r=17001&c=px-cluster-cassandra-2aecfba1-634c-40f8-b341-268f51082229&stork=true&csi=true&tel=false&st=k8s
 ---
 kind: Service
 apiVersion: v1
 metadata:
   name: portworx-service
-  namespace: portworx
+  namespace: kube-system
   labels:
     name: portworx
 spec:
@@ -15,32 +15,32 @@ spec:
     - name: px-api
       protocol: TCP
       port: 9001
-      targetPort: 9001
+      targetPort: 17001
     - name: px-kvdb
       protocol: TCP
       port: 9019
-      targetPort: 9019
+      targetPort: 17016
     - name: px-sdk
       protocol: TCP
       port: 9020
-      targetPort: 9020
+      targetPort: 17017
     - name: px-rest-gateway
       protocol: TCP
       port: 9021
-      targetPort: 9021
+      targetPort: 17018
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: px-account
-  namespace: portworx
+  namespace: kube-system
 ---
 
 apiVersion: v1
 kind: Secret
 metadata:
   name: px-essential
-  namespace: portworx
+  namespace: kube-system
 data:
   px-essen-user-id: YTZhNzY0Y2EtNDY0ZS00NjI0LWI5NDYtMTIxNGU4ZjAzZjI0
   px-osb-endpoint: aHR0cHM6Ly9weGVzc2VudGlhbHMucG9ydHdvcnguY29tL29zYi9iaWxsaW5nL3YxL3JlZ2lzdGVy
@@ -50,11 +50,11 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: portworx
-  namespace: portworx
+  namespace: kube-system
   labels:
     name: portworx
   annotations:
-    portworx.com/install-source: "https://install.portworx.com/?mc=false&kbver=1.21.14&ns=portworx&oem=esse&user=a6a764ca-464e-4624-b946-1214e8f03f24&b=true&s=%2Fdev%2Fsdb&j=auto&c=px-cluster-fec4e8bd-9a5b-4feb-9fd0-15f632d8a931&stork=true&csi=true&tel=true&st=k8s"
+    portworx.com/install-source: "https://install.portworx.com/?mc=false&kbver=1.21.14&oem=esse&user=a6a764ca-464e-4624-b946-1214e8f03f24&b=true&s=%2Fdev%2Fsdb&j=auto&r=17001&c=px-cluster-cassandra-2aecfba1-634c-40f8-b341-268f51082229&stork=true&csi=true&tel=false&st=k8s"
 spec:
   selector:
     matchLabels:
@@ -87,7 +87,7 @@ spec:
           image: portworx/oci-monitor:2.13.5
           imagePullPolicy: Always
           args:
-            ["-c", "px-cluster-fec4e8bd-9a5b-4feb-9fd0-15f632d8a931", "-s", "/dev/sdb", "-secret_type", "k8s", "-j", "auto", "-b", "--oem", "esse", 
+            ["-c", "px-cluster-cassandra-2aecfba1-634c-40f8-b341-268f51082229", "-s", "/dev/sdb", "-secret_type", "k8s", "-j", "auto", "-b", "-r", "17001", "--oem", "esse", 
              "-x", "kubernetes"]
           env:
             - name: "PX_TEMPLATE_VERSION"
@@ -111,13 +111,13 @@ spec:
             httpGet:
               host: 127.0.0.1
               path: /status
-              port: 9001
+              port: 17001
           readinessProbe:
             periodSeconds: 10
             httpGet:
               host: 127.0.0.1
               path: /health
-              port: 9015
+              port: 17015
           terminationMessagePath: "/tmp/px-termination-log"
           securityContext:
             privileged: true
@@ -219,13 +219,13 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: px-csi-account
-  namespace: portworx
+  namespace: kube-system
 ---
 kind: Service
 apiVersion: v1
 metadata:
   name: px-csi-service
-  namespace: portworx
+  namespace: kube-system
 spec:
   clusterIP: None
 ---
@@ -233,7 +233,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: px-csi-ext
-  namespace: portworx
+  namespace: kube-system
 spec:
   replicas: 3
   selector:
@@ -321,7 +321,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: portworx-api
-  namespace: portworx
+  namespace: kube-system
   labels:
     name: portworx-api
 spec:
@@ -332,21 +332,21 @@ spec:
     - name: px-api
       protocol: TCP
       port: 9001
-      targetPort: 9001
+      targetPort: 17001
     - name: px-sdk
       protocol: TCP
       port: 9020
-      targetPort: 9020
+      targetPort: 17017
     - name: px-rest-gateway
       protocol: TCP
       port: 9021
-      targetPort: 9021
+      targetPort: 17018
 ---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: portworx-api
-  namespace: portworx
+  namespace: kube-system
   labels:
     name: portworx-api
 spec:
@@ -385,7 +385,7 @@ spec:
             httpGet:
               host: 127.0.0.1
               path: /status
-              port: 9001
+              port: 17001
       restartPolicy: Always
       serviceAccountName: px-account
 ---
@@ -1417,7 +1417,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: px-account
-  namespace: portworx
+  namespace: kube-system
 roleRef:
   kind: Role
   name: px-role
@@ -1427,7 +1427,7 @@ roleRef:
  apiVersion: rbac.authorization.k8s.io/v1
  metadata:
    name: px-role
-   namespace: portworx
+   namespace: kube-system
  rules:
  - apiGroups: [""]
    resources: ["secrets"]
@@ -1437,11 +1437,11 @@ roleRef:
  apiVersion: rbac.authorization.k8s.io/v1
  metadata:
    name: px-role-binding
-   namespace: portworx
+   namespace: kube-system
  subjects:
  - kind: ServiceAccount
    name: px-account
-   namespace: portworx
+   namespace: kube-system
  roleRef:
    kind: Role
    name: px-role
@@ -1504,7 +1504,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: px-account
-  namespace: portworx
+  namespace: kube-system
 roleRef:
   kind: ClusterRole
   name: node-get-put-list-role
@@ -1581,7 +1581,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: px-csi-account
-  namespace: portworx
+  namespace: kube-system
 roleRef:
   kind: ClusterRole
   name: px-csi-role
@@ -1591,7 +1591,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: stork-account
-  namespace: portworx
+  namespace: kube-system
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -1601,7 +1601,7 @@ metadata:
   labels:
     tier: control-plane
   name: stork
-  namespace: portworx
+  namespace: kube-system
 spec:
   selector:
     matchLabels:
@@ -1654,7 +1654,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: stork-service
-  namespace: portworx
+  namespace: kube-system
 spec:
   selector:
     name: stork
@@ -1672,7 +1672,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: stork-config
-  namespace: portworx
+  namespace: kube-system
 data:
   policy.cfg: |-
     {
@@ -1680,7 +1680,7 @@ data:
       "apiVersion": "v1",
       "extenders": [
         {
-          "urlPrefix": "http://stork-service.portworx:8099",
+          "urlPrefix": "http://stork-service.kube-system:8099",
           "apiVersion": "v1beta1",
           "filterVerb": "filter",
           "prioritizeVerb": "prioritize",
@@ -1697,7 +1697,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: stork-scheduler-account
-  namespace: portworx
+  namespace: kube-system
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -1707,7 +1707,7 @@ metadata:
     tier: control-plane
     name: stork-scheduler
   name: stork-scheduler
-  namespace: portworx
+  namespace: kube-system
 spec:
   selector:
     matchLabels:
@@ -1739,7 +1739,7 @@ spec:
           - --leader-elect=true
           - --scheduler-name=stork
           - --policy-configmap=stork-config
-          - --policy-configmap-namespace=portworx
+          - --policy-configmap-namespace=kube-system
           - --lock-object-name=stork-scheduler
           image: registry.k8s.io/kube-scheduler-amd64:v1.21.14
           imagePullPolicy: Always
@@ -1819,7 +1819,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: stork-scheduler-account
-  namespace: portworx
+  namespace: kube-system
 roleRef:
   kind: ClusterRole
   name: stork-scheduler-role
@@ -1847,7 +1847,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: stork-account
-  namespace: portworx
+  namespace: kube-system
 roleRef:
   kind: ClusterRole
   name: stork-role
@@ -1857,7 +1857,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: autopilot-config
-  namespace: portworx
+  namespace: kube-system
 data:
   config.yaml: |-
     providers:
@@ -1870,7 +1870,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: autopilot-account
-  namespace: portworx
+  namespace: kube-system
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -1880,7 +1880,7 @@ metadata:
   labels:
     tier: control-plane
   name: autopilot
-  namespace: portworx
+  namespace: kube-system
 spec:
   selector:
     matchLabels:
@@ -1941,7 +1941,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: autopilot
-  namespace: portworx
+  namespace: kube-system
   labels:
     name: autopilot-service
 spec:
@@ -1969,7 +1969,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: autopilot-account
-  namespace: portworx
+  namespace: kube-system
 roleRef:
   kind: ClusterRole
   name: autopilot-role
